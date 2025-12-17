@@ -197,12 +197,29 @@ export const ConnectionsPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 4, maxWidth: 1400, mx: 'auto' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+    <Box sx={{ p: { xs: 2, sm: 3, md: 4 }, maxWidth: 1400, mx: 'auto' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          justifyContent: 'space-between',
+          alignItems: { xs: 'flex-start', sm: 'center' },
+          gap: 2,
+          mb: 3,
+        }}
+      >
         <Typography variant="h4" component="h1">
           LLM Connections
         </Typography>
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: { xs: 1, sm: 1.5 },
+            alignItems: { xs: 'stretch', sm: 'center' },
+            width: { xs: '100%', sm: 'auto' },
+          }}
+        >
           <Tooltip title="Refresh connections">
             <IconButton
               onClick={() => dispatch(fetchConnections())}
@@ -218,7 +235,6 @@ export const ConnectionsPage: React.FC = () => {
               startIcon={<TestIcon />}
               onClick={handleTestAllConnections}
               disabled={isLoading}
-              sx={{ mr: 1 }}
             >
               Test All
             </Button>
@@ -228,6 +244,7 @@ export const ConnectionsPage: React.FC = () => {
             startIcon={<AddIcon />}
             onClick={handleCreateConnection}
             disabled={isLoading}
+            fullWidth={isMobile}
           >
             Add Connection
           </Button>
@@ -257,17 +274,16 @@ export const ConnectionsPage: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <Grid container spacing={4} sx={{ justifyContent: 'flex-start' }}>
+        <Grid container spacing={{ xs: 2, md: 4 }} sx={{ justifyContent: 'flex-start' }}>
           {(connections || []).map((connection) => (
-            <Grid item xs={12} sm={12} md={10} lg={8} xl={6} key={connection.id}>
-              <Card 
-                sx={{ 
-                  height: '100%', 
-                  display: 'flex', 
+            <Grid item xs={12} sm={12} md={6} lg={4} xl={4} key={connection.id}>
+              <Card
+                sx={{
+                  height: '100%',
+                  display: 'flex',
                   flexDirection: 'column',
                   transition: 'all 0.2s ease-in-out',
-                  minWidth: 400,
-                  maxWidth: 600,
+                  width: '100%',
                   mx: 'auto',
                   '&:hover': {
                     transform: 'translateY(-2px)',
@@ -275,13 +291,22 @@ export const ConnectionsPage: React.FC = () => {
                   }
                 }}
               >
-                <CardContent sx={{ flexGrow: 1, p: 4 }}>
+                <CardContent sx={{ flexGrow: 1, p: { xs: 3, sm: 4 } }}>
                   {/* Header with provider logo and status */}
-                  <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 4 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-                      <Box 
-                        sx={{ 
-                          width: 56, 
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      rowGap: 2,
+                      mb: 4,
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
+                      <Box
+                        sx={{
+                          width: 56,
                           height: 56, 
                           borderRadius: 3, 
                           bgcolor: connection.provider === 'openai' ? '#10a37f' : 
@@ -300,13 +325,13 @@ export const ConnectionsPage: React.FC = () => {
                          connection.provider === 'bedrock' ? '☁️' : '🔗'}
                       </Box>
                       <Box sx={{ flex: 1, minWidth: 0 }}>
-                        <Typography 
-                          variant="h5" 
-                          sx={{ 
+                        <Typography
+                          variant="h5"
+                          sx={{
                             fontWeight: 600,
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
+                            whiteSpace: { xs: 'normal', sm: 'nowrap' },
                             mb: 0.5
                           }}
                         >
@@ -335,26 +360,50 @@ export const ConnectionsPage: React.FC = () => {
 
                   {/* Connection Details */}
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: 1.5,
+                        flexWrap: 'wrap',
+                      }}
+                    >
                       <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
                         Created:
                       </Typography>
-                      <Typography variant="body1" fontWeight={600}>
+                      <Typography variant="body1" fontWeight={600} textAlign="right">
                         {new Date(connection.createdAt).toLocaleDateString()}
                       </Typography>
                     </Box>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: 1.5,
+                        flexWrap: 'wrap',
+                      }}
+                    >
                       <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
                         Last tested:
                       </Typography>
-                      <Typography variant="body1" fontWeight={600}>
+                      <Typography variant="body1" fontWeight={600} textAlign="right">
                         {formatLastTested(connection.lastTested)}
                       </Typography>
                     </Box>
 
                     {connection.provider === 'openai' && (
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          gap: 1.5,
+                          flexWrap: 'wrap',
+                        }}
+                      >
                         <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
                           Default model:
                         </Typography>
@@ -368,7 +417,15 @@ export const ConnectionsPage: React.FC = () => {
                     )}
 
                     {connection.provider === 'bedrock' && (
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          gap: 1.5,
+                          flexWrap: 'wrap',
+                        }}
+                      >
                         <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
                           Region:
                         </Typography>
@@ -390,28 +447,37 @@ export const ConnectionsPage: React.FC = () => {
                   )}
                 </CardContent>
 
-                <CardActions sx={{ justifyContent: 'space-between', px: 4, pb: 4, pt: 2 }}>
+                <CardActions
+                  sx={{
+                    justifyContent: 'space-between',
+                    px: { xs: 3, sm: 4 },
+                    pb: { xs: 3, sm: 4 },
+                    pt: { xs: 1, sm: 2 },
+                    gap: 2,
+                    flexWrap: 'wrap',
+                  }}
+                >
                   <Button
                     variant="contained"
                     size="large"
                     startIcon={<TestIcon />}
                     onClick={() => handleTestConnectionAction(connection.id)}
                     disabled={isLoading}
-                    sx={{ minWidth: 120, py: 1.5 }}
+                    sx={{ minWidth: 120, py: 1.5, flexGrow: { xs: 1, sm: 0 } }}
                   >
                     Test
                   </Button>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                     <Tooltip title="View test details">
                       <IconButton
                         size="medium"
                         onClick={() => handleTestConnection(connection)}
                         disabled={!testResults[connection.id]}
-                        sx={{ 
+                        sx={{
                           bgcolor: testResults[connection.id] ? 'action.hover' : 'transparent',
                           '&:hover': { bgcolor: 'action.selected' },
                           width: 44,
-                          height: 44
+                          height: 44,
                         }}
                       >
                         <CheckCircleIcon />
@@ -421,10 +487,10 @@ export const ConnectionsPage: React.FC = () => {
                       <IconButton
                         size="medium"
                         onClick={() => handleEditConnection(connection)}
-                        sx={{ 
+                        sx={{
                           '&:hover': { bgcolor: 'action.selected' },
                           width: 44,
-                          height: 44
+                          height: 44,
                         }}
                       >
                         <EditIcon />
@@ -435,10 +501,10 @@ export const ConnectionsPage: React.FC = () => {
                         size="medium"
                         onClick={() => handleDeleteConnection(connection)}
                         color="error"
-                        sx={{ 
+                        sx={{
                           '&:hover': { bgcolor: 'error.light', color: 'error.contrastText' },
                           width: 44,
-                          height: 44
+                          height: 44,
                         }}
                       >
                         <DeleteIcon />
